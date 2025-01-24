@@ -65,11 +65,10 @@ def generate_lore(recent_event: str = "", lore: str = ""):
     'recent_event' is any prior event text, 'lore' is the last known lore JSON/string.
     """
     lore_prompt = f"""
-    You are a game lore generator.
-    The current lore is: {lore}
-    The most recent event is: {recent_event}
-    Please craft or update the lore of a 2D RPG-like grassland town with 2 characters.
-    Provide a simple text string of only the updated lore.
+    You are a creative narrative AI. The current lore is: {lore}.
+    The latest event: {recent_event}.
+    Enrich the story with emotional and descriptive details about the environment, character feelings, and random ambiance (weather, sounds, or unexpected phenomena).
+    Limit to 4 sentences. End with a small cliffhanger or intrigue if relevant.
     """
 
     response = ask_agent(lore_prompt, session_id="lore_generation")
@@ -130,18 +129,21 @@ def generate_event_endpoint():
     current_lore = data.get("lore", "{}")
     game_data = data.get("gameData", "{}")
 
-    event_prompt = f"""You are an event generator for a dynamic RPG game.
+    event_prompt = f"""
+    You are an event generator for a dynamic RPG game.
     Current Lore: {current_lore}
 
     Available Game Data:
     {game_data}
 
-    Based on the current lore, choose the most likely event to happen out of the possibilities included in the Game Data, try not to reselect events that have already happened recently, output a valid JSON event using this structure:
+    You should choose an event from the available data. 
+    Please be creative or unexpected sometimes, and do not always pick the same location or character. 
+    Output valid JSON:
     {{
         "location": "<one of the available location IDs>",
-        "character": "<an available protagonist character ID or false>",
+        "character": "<an available character ID or false>",
         "eventType": "<one of the allowed events>",
-        "eventExplanation": "<brief explanation of the event>"
+        "eventExplanation": "<brief explanation>"
     }}
     Only output JSON and nothing else.
     """
